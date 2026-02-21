@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>10 Random Commanders (No U/B)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 2rem; }
+    button { padding: 0.6rem 1rem; font-size: 1rem; cursor: pointer; }
+    .grid {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      border-radius: 10px;
+      padding: 0.5rem;
+      box-shadow: 0 6px 16px rgba(0,0,0,.15);
+      background: #fff;
+      text-align: center;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .name {
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎴 10 Random Commanders (not U/B)</h1>
+  <button id="btn">Roll 10 commanders</button>
+
+  <div class="grid" id="grid"></div>
+
+  <script>
+    async function getTenRandom() {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "Loading...";
+
+      const requests = Array.from({ length: 10 }, () =>
+        fetch("https://api.scryfall.com/cards/random?q=is:commander+not:ub")
+          .then(r => r.json())
+      );
+
+      const cards = await Promise.all(requests);
+
+      grid.innerHTML = cards.map(card => `
+        <div class="card">
+          <a href="${card.scryfall_uri}" target="_blank" rel="noreferrer">
+            <img src="${card.image_uris?.normal || card.card_faces?.[0]?.image_uris?.normal}" alt="${card.name}">
+          </a>
+          <div class="name">${card.name}</div>
+        </div>
+      `).join("");
+    }
+
+    document.getElementById("btn").addEventListener("click", getTenRandom);
+  </script>
+</body>
+</html>
