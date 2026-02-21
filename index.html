@@ -41,7 +41,7 @@
       grid.innerHTML = "Loading...";
 
       const requests = Array.from({ length: 10 }, () =>
-        fetch("https://api.scryfall.com/cards/random?q=is:commander+not:ub")
+        fetch("https://api.scryfall.com/cards/random?q=is:commander+not:ub+f:c")
           .then(r => r.json())
       );
 
